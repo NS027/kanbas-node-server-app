@@ -1,5 +1,6 @@
 import PathParameters from "./PathParameters.js";
 import QueryParameters from "./QueryParameters.js";
+import WorkingWithObjects from "./WorkingWithObjects.js";
 const Lab5 = (app) => {
     app.get("/lab5/welcome", (req, res) => {
         res.send("Welcome to Assignment 5!");
@@ -9,6 +10,7 @@ const Lab5 = (app) => {
     });
     PathParameters(app);
     QueryParameters(app);
+    WorkingWithObjects(app);
 
 };
 export default Lab5;
