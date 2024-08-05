@@ -26,4 +26,14 @@ export default function CourseRoutes(app) {
         const courses = Database.courses;
         res.send(courses);
     });
+
+    app.get("/api/courses/:id", (req, res) => {
+        const { id } = req.params;
+        const course = Database.courses.find(c => c._id === id);
+        if (course) {
+            res.send(course);
+        } else {
+            res.status(404).send({ error: "Course not found" });
+        }
+    });
 }
