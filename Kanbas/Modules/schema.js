@@ -1,17 +1,17 @@
-import mongoose from "mongoose";
-
-const lessonSchema = new mongoose.Schema({
-  id: { type: String, required: true, unique: true },
-  name: { type: String, required: true },
-  description: { type: String },
-  module: { type: String, required: true }  
-}, { collection: "lessons" });
+import mongoose from 'mongoose';
 
 const moduleSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  description: { type: String },
-  course: { type: String, required: true },  
-  lessons: [lessonSchema]
-}, { collection: "modules" });
+  _id: { type: String, default: () => new mongoose.Types.ObjectId().toString() }, 
+  name: { type: String},
+  description: String,
+  course: { type: String},
+  lessons: [
+    {
+      _id: { type: String}, 
+      name: { type: String, required: true },
+      description: String
+    }
+  ]
+}, { collection: 'modules' });
 
 export default moduleSchema;

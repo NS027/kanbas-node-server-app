@@ -1,31 +1,49 @@
 import * as dao from "./dao.js";
 
 export default function ModuleRoutes(app) {
-  app.get("/api/courses/:courseCode/modules", async (req, res) => {
-    const { courseCode } = req.params;
-    const modules = await dao.findModulesForCourse(courseCode);
+  const createModule = async (req, res) => {
+    try {
+      const module = await dao.createModule(req.body);
+      res.status(201).json(module);
+    } catch (error) {
+      res.status(400).json({ message: error.message });
+      console.log("Id is required.")
+    }
+  };
+
+  const deleteModule = async (req, res) => {
+    const status = await dao.deleteModule(req.params.moduleId);
+    res.json(status);
+  };
+
+  const findAllModules = async (req, res) => {
+    const modules = await dao.findAllModules();
     res.json(modules);
-  });
+  };
 
-  app.post("/api/courses/:courseCode/modules", async (req, res) => {
-    const { courseCode } = req.params;
-    const newModule = {
-      ...req.body,
-      course: courseCode
-    };
-    const createdModule = await dao.createModule(newModule);
-    res.send(createdModule);
-  });
+  const findModuleById = async (req, res) => {
+    const module = await dao.findModuleById(req.params.moduleId);
+    res.json(module);
+  };
 
-  app.delete("/api/modules/:mid", async (req, res) => {
-    const { mid } = req.params;
-    await dao.deleteModule(mid);
-    res.sendStatus(200);
-  });
+  const updateModule = async (req, res) => {
+    const { moduleId } = req.params;
+    const status = await dao.updateModule(moduleId, req.body);
+    res.json(status);
+  };
 
-  app.put("/api/modules/:mid", async (req, res) => {
-    const { mid } = req.params;
-    await dao.updateModule(mid, req.body);
-    res.sendStatus(204);
-  });
+  const findModulesByCourseId = async (req, res) => {
+    const { courseId } = req.params;
+    console.log('Received request to find modules by course id:', courseId);
+    const modules = await dao.findModulesByCourseId(courseId);
+    console.log('Find the modules:', modules);
+    res.json(modules);
+  };
+
+  app.post("/api/modules", createModule);
+  app.delete("/api/modules/:moduleId", deleteModule);
+  app.get("/api/modules", findAllModules);
+  app.get("/api/modules/:moduleId", findModuleById);
+  app.put("/api/modules/:moduleId", updateModule);
+  app.get("/api/courses/:courseId/modules", findModulesByCourseId);
 }
